@@ -1,4 +1,6 @@
 # TP 9 - POO — SmartTicket
+**Grupo 13**
+**Integrantes:** Milton Cárdenas, Hilt Malena, Lavergne Elizabeth, Molina Guadalupe, Roude Mariel, Tejeda Lucía. 
 
 API para gestión de entradas, pagos y control de acceso a eventos, desarrollada con **FastAPI**, **SQLAlchemy** y **SQLite**.
 
