@@ -11,13 +11,14 @@ Python 3.13 · FastAPI · Uvicorn · SQLAlchemy · SQLite · Pydantic
 ```text
 poo_tp9/
 ├── app/
-│   ├── main.py             # App FastAPI, creación de tablas y manejo de errores de negocio
+│   ├── main.py             # App FastAPI, creación de tablas y manejo de errores
 │   ├── database.py         # Conexión SQLite y sesiones
 │   ├── models.py           # Entidades (Lugar, Sector, Evento, PrecioSectorEvento, Entrada, Cliente, Venta)
 │   ├── schemas.py          # Esquemas Pydantic
-│   ├── repositories.py     # Acceso a datos
+│   ├── repositories.py     # Acceso a datos (incluye operaciones CRUD)
 │   ├── routers/
-│   │   └── pagos.py        # Endpoints
+│   │   ├── pagos.py        # Endpoints de las Historias de Usuario
+│   │   └── crud.py         # Endpoints de Administración (ABM básico)
 │   └── services/
 │       ├── ticket_service.py   # Lógica de negocio
 │       ├── pasarela_pago.py    # PasarelaPago (abstracta) y PasarelaPagoSimulada
@@ -25,7 +26,6 @@ poo_tp9/
 ├── seed.py                 # Datos de prueba
 ├── requirements.txt
 └── README.md
-```
 
 ## Instalación y ejecución
 
@@ -59,7 +59,30 @@ Si PowerShell bloquea la activación: `Set-ExecutionPolicy -Scope Process -Execu
 | Cliente | ID 1 — Juan Pérez (juan@email.com) |
 | Entradas | IDs 1 a 10, QR `QR-ROCKFEST-PLATEA-001` a `QR-ROCKFEST-PLATEA-010` |
 
-## Endpoints
+
+### Endpoints
+
+### Administración / CRUD
+
+Permiten crear y listar las entidades base del sistema para probar el flujo vertical desde la base de datos hasta el controlador.
+
+- `POST /admin/lugares` — Crear un Lugar.
+- `GET /admin/lugares` — Listar Lugares.
+- `GET /admin/lugares/{id}` — Buscar un Lugar por su ID.
+- `POST /admin/sectores` — Crear un Sector.
+- `GET /admin/sectores` — Listar Sectores.
+- `GET /admin/sectores/{id}` — Buscar un Sector por su ID.
+- `POST /admin/eventos` — Crear un Evento.
+- `GET /admin/eventos` — Listar Eventos.
+- `GET /admin/eventos/{id}` — Buscar un Evento por su ID.
+- `POST /admin/clientes` — Crear un Cliente.
+- `GET /admin/clientes` — Listar Clientes.
+- `GET /admin/clientes/{id}` — Buscar un Cliente por su ID.
+- `POST /admin/precios` — Asignar un Precio a un Sector/Evento.
+- `GET /admin/precios` — Listar Precios.
+- `GET /admin/precios/{id}` — Buscar un Precio por su ID.
+
+
 
 ### HU1 — `POST /pagos/cotizar`
 
@@ -104,13 +127,15 @@ Respuesta `200`: `{ "mensaje": "Acceso Permitido", "hora_ingreso": "..." }`. La 
 | Entrada ya utilizada | 409 | Entrada ya utilizada |
 | Entrada Disponible o Reservada | 400 | Ticket no emitido / Falta de pago |
 
+
 ## Arquitectura (GRASP y SOLID)
 
-- **SRP:** el router solo recibe la petición y responde; la lógica está en `TicketService`.
-- **Experto en Información:** `PrecioSectorEvento` calcula el subtotal y `Entrada` maneja sus propios cambios de estado.
-- **DIP / inyección de dependencias:** `TicketService` recibe repositorios y `PasarelaPago` por constructor; el router los arma con `Depends`.
-- **Abierto/Cerrado:** se puede reemplazar la pasarela simulada por una real implementando `PasarelaPago`.
-- **Concurrencia:** las entradas se reservan con un `UPDATE` condicional (Disponible → Reservada) antes de consultar la pasarela, y se liberan si el pago es rechazado.
+- **SRP (Principio de Responsabilidad Única):** los routers solo reciben la petición y devuelven la respuesta HTTP; la lógica de negocio está centralizada en `TicketService` y el acceso a datos en los repositorios.
+- **Experto en Información (GRASP):** `PrecioSectorEvento` calcula el subtotal y `Entrada` maneja sus propios cambios de estado (métodos `emitir` y `registrar_ingreso`), evitando tener lógica anémica.
+- **DIP (Inversión de Dependencias):** `TicketService` recibe sus dependencias (repositorios y `PasarelaPago`) por constructor; los routers las inyectan utilizando el sistema de `Depends` de FastAPI.
+- **Abierto/Cerrado (OCP):** la pasarela de pago puede reemplazarse por una real (ej. MercadoPago) implementando la interfaz `PasarelaPago`, sin necesidad de modificar la lógica del servicio.
+- **Concurrencia:** las entradas se reservan con un `UPDATE` condicional atómico en la base de datos (Disponible → Reservada) antes de consultar a la pasarela, y se liberan si el pago es rechazado. Esto evita problemas de doble venta.
+- **Separación de capas:** El flujo de una petición va del `Router` (Controlador) al `Service` (Lógica), y de este a los `Repositories` (Acceso a base de datos).
 
 ## Flujo de estados
 
