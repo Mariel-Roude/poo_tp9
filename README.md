@@ -9,30 +9,30 @@ API para gestión de entradas, pagos y control de acceso a eventos, desarrollada
 
 Python 3.13 · FastAPI · Uvicorn · SQLAlchemy · SQLite · Pydantic
 
+```text
 poo_tp9/
 ├── app/
-│   ├── main.py             # App FastAPI, creación de tablas y manejo de errores
-│   ├── database.py         # Conexión SQLite y sesiones
-│   ├── models.py           # Entidades (Lugar, Sector, Evento, PrecioSectorEvento, Entrada, Cliente, Venta)
-│   ├── schemas.py          # Esquemas Pydantic
-│   ├── repositories.py     # Acceso a datos (incluye operaciones CRUD)
+│   ├── main.py              # App FastAPI, creación de tablas y manejo de errores
+│   ├── database.py          # Conexión SQLite y sesiones
+│   ├── models.py            # Entidades (Lugar, Sector, Evento, PrecioSectorEvento, Entrada, Cliente, Venta)
+│   ├── schemas.py           # Esquemas Pydantic
+│   ├── repositories.py      # Acceso a datos (incluye operaciones CRUD)
 │   ├── routers/
-│   │   ├── pagos.py        # Endpoints de las Historias de Usuario
-│   │   └── crud.py         # Endpoints de Administración (ABM básico)
+│   │   ├── pagos.py         # Endpoints de las Historias de Usuario
+│   │   └── crud.py          # Endpoints de Administración (ABM básico)
 │   └── services/
-│       ├── ticket_service.py   # Lógica de negocio
-│       ├── pasarela_pago.py    # PasarelaPago (abstracta) y PasarelaPagoSimulada
-│       └── excepciones.py      # Errores de dominio con su código HTTP
-├── diagramas/              # Diagramas UML exportados
+│       ├── ticket_service.py # Lógica de negocio
+│       ├── pasarela_pago.py  # PasarelaPago (abstracta) y PasarelaPagoSimulada
+│       └── excepciones.py    # Errores de dominio con su código HTTP
+├── diagramas/               # Diagramas UML exportados
 │   ├── diagrama-clases.png
 │   ├── secuencia-hu1.png
 │   ├── secuencia-hu2.png
 │   └── secuencia-hu3.png
-├── seed.py                 # Datos de prueba
+├── seed.py                  # Datos de prueba
 ├── requirements.txt
 └── README.md
-
-
+```
 
 
 ## Instalación y ejecución
