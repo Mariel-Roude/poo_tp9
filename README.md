@@ -9,9 +9,6 @@ API para gestión de entradas, pagos y control de acceso a eventos, desarrollada
 
 Python 3.13 · FastAPI · Uvicorn · SQLAlchemy · SQLite · Pydantic
 
-## Estructura del proyecto
-
-```text
 poo_tp9/
 ├── app/
 │   ├── main.py             # App FastAPI, creación de tablas y manejo de errores
@@ -26,9 +23,17 @@ poo_tp9/
 │       ├── ticket_service.py   # Lógica de negocio
 │       ├── pasarela_pago.py    # PasarelaPago (abstracta) y PasarelaPagoSimulada
 │       └── excepciones.py      # Errores de dominio con su código HTTP
+├── diagramas/            # Diagramas UML (Clases y Secuencia)
+│   ├── diagrama-clases.png
+│   ├── secuencia-hu1.png
+│   ├── secuencia-hu2.png
+│   └── secuencia-hu3.png
 ├── seed.py                 # Datos de prueba
 ├── requirements.txt
 └── README.md
+
+
+
 
 ## Instalación y ejecución
 
@@ -129,6 +134,36 @@ Respuesta `200`: `{ "mensaje": "Acceso Permitido", "hora_ingreso": "..." }`. La 
 | QR inexistente | 404 | Ticket Inválido o Inexistente |
 | Entrada ya utilizada | 409 | Entrada ya utilizada |
 | Entrada Disponible o Reservada | 400 | Ticket no emitido / Falta de pago |
+
+
+
+## Diagramas de Diseño
+
+A continuación se presentan los diagramas que modelan la estructura estática y el comportamiento dinámico del sistema.
+
+### 1. Diagrama de Clases (Estructura Estática)
+Muestra las entidades del dominio, sus relaciones, y la aplicación de los patrones GRASP (Experto en Información) y SOLID (Inversión de Dependencias con la interfaz `PasarelaPago`).
+
+![Diagrama de Clases](diagramas/diagrama-clases.png)
+
+### 2. Diagramas de Secuencia (Comportamiento Dinámico)
+
+**HU1 - Selección y Cotización:**
+Muestra el flujo de validación de stock y cálculo de precio.
+
+![Secuencia HU1](diagramas/secuencia-hu1.png)
+
+**HU2 - Procesamiento de Pago y Emisión:**
+Demuestra el manejo de concurrencia (reserva atómica) y la comunicación con la pasarela de pagos.
+
+![Secuencia HU2](diagramas/secuencia-hu2.png)
+
+**HU3 - Control de Acceso en Puerta:**
+Ilustra la validación del QR y las reglas de negocio para evitar fraudes o reingresos.
+
+![Secuencia HU3](diagramas/secuencia-hu3.png)
+
+
 
 
 ## Arquitectura (GRASP y SOLID)

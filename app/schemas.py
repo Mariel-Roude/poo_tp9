@@ -43,7 +43,7 @@ class EscaneoResponse(BaseModel):
     hora_ingreso: datetime
 
 
-# ---- CRUD BÁSICO (Punto 5 del TP) ----
+# ---- CRUD BÁSICO ----
 class LugarCreate(BaseModel):
     nombre: str
     direccion: str
