@@ -23,7 +23,7 @@ poo_tp9/
 │       ├── ticket_service.py   # Lógica de negocio
 │       ├── pasarela_pago.py    # PasarelaPago (abstracta) y PasarelaPagoSimulada
 │       └── excepciones.py      # Errores de dominio con su código HTTP
-├── diagramas/            # Diagramas UML (Clases y Secuencia)
+├── diagramas/              # Diagramas UML exportados
 │   ├── diagrama-clases.png
 │   ├── secuencia-hu1.png
 │   ├── secuencia-hu2.png
